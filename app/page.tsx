@@ -1,756 +1,712 @@
-import Script from "next/script";
+import type { ReactNode } from "react";
 import Reveal from "./_components/reveal";
-import Faq from "./_components/faq";
 
-const BUSINESS = {
+const BIZ = {
   name: "Air Master Heat and Air, Inc.",
-  wordmark: "Air Master",
-  wordmarkSuffix: "Heat & Air",
-  legal: "Air Master Heat and Air, Inc.",
-  since: 1986,
-  now: 2026,
   owner: "Farid Farahvash",
+  ownerFirst: "Farid",
+  since: 1986,
   phone: "(916) 399-1585",
   phoneHref: "tel:+19163991585",
-  address: "3513 La Grande Blvd, Sacramento, CA 95823",
-  city: "Sacramento",
-  region: "California",
-  serviceArea: "Sacramento and the surrounding metro",
+  street: "3513 La Grande Blvd",
+  cityLine: "Sacramento, CA 95823",
   rating: 4.7,
   reviewCount: 8,
-  tagline: "Sacramento's heating and air, kept honest since 1986.",
+  mapsUrl:
+    "https://www.google.com/maps/search/?api=1&query=Air%20Master%20Heat%20and%20Air%2C%20Inc&query_place_id=ChIJc3eD3DrGmoARPyPZSB7G6zY",
+  directionsUrl:
+    "https://www.google.com/maps/dir/?api=1&destination=3513%20La%20Grande%20Blvd%2C%20Sacramento%2C%20CA%2095823",
+  mapEmbed:
+    "https://maps.google.com/maps?q=3513%20La%20Grande%20Blvd%2C%20Sacramento%2C%20CA%2095823&z=12&output=embed",
 };
 
+const YEARS = new Date().getFullYear() - BIZ.since;
+
+/* ---------- icons (24px line, 2px stroke) ---------- */
+type IconProps = { className?: string };
+const svg = (path: ReactNode) =>
+  function Icon({ className = "h-6 w-6" }: IconProps) {
+    return (
+      <svg
+        className={className}
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        {path}
+      </svg>
+    );
+  };
+
+const PhoneIcon = svg(
+  <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z" />
+);
+const SnowIcon = svg(
+  <>
+    <path d="M12 2v20M4.9 4.9l14.2 14.2M2 12h20M4.9 19.1 19.1 4.9" />
+    <path d="m9 4 3 3 3-3M9 20l3-3 3 3M4 9l3 3-3 3M20 9l-3 3 3 3" />
+  </>
+);
+const FlameIcon = svg(
+  <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3.3.3 1.6 1.5 2.8 2.5 2.8z" />
+);
+const WrenchIcon = svg(
+  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z" />
+);
+const RefreshIcon = svg(
+  <>
+    <path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5" />
+    <path d="M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5" />
+  </>
+);
+const ClipboardIcon = svg(
+  <>
+    <rect x="8" y="2" width="8" height="4" rx="1" />
+    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M9 14l2 2 4-4" />
+  </>
+);
+const HomeIcon = svg(
+  <>
+    <path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+    <path d="M9 22V12h6v10" />
+  </>
+);
+const CalendarIcon = svg(
+  <>
+    <rect x="3" y="4" width="18" height="18" rx="2" />
+    <path d="M16 2v4M8 2v4M3 10h18" />
+  </>
+);
+const UsersIcon = svg(
+  <>
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8" />
+  </>
+);
+const TagIcon = svg(
+  <>
+    <path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z" />
+    <circle cx="7" cy="7" r="1.5" />
+  </>
+);
+const PinIcon = svg(
+  <>
+    <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0z" />
+    <circle cx="12" cy="10" r="3" />
+  </>
+);
+const ChevronDown = svg(<path d="m6 9 6 6 6-6" />);
+const ArrowRight = svg(<path d="M5 12h14M13 6l6 6-6 6" />);
+
+function Stars({ className = "h-5 w-5" }: IconProps) {
+  return (
+    <span className="inline-flex text-amber" aria-hidden="true">
+      {[0, 1, 2, 3, 4].map((i) => (
+        <svg key={i} className={className} viewBox="0 0 24 24" fill="currentColor">
+          <path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8L12 17.8 5.8 21l1.2-6.8-5-4.9 6.9-1z" />
+        </svg>
+      ))}
+    </span>
+  );
+}
+
+/* ---------- content (from the CRM research record) ---------- */
 const SERVICES = [
   {
-    id: "I",
-    signal: "amber",
-    title: "AC Installation",
-    body:
-      "New central air systems sized by load calculation — never rule-of-thumb. Replacement condensers, coils, line-sets and thermostats matched to your Sacramento home's square footage, insulation, and orientation.",
-    tags: ["Sizing", "Condenser", "Coil", "Line-set"],
-  },
-  {
-    id: "II",
-    signal: "amber",
+    icon: SnowIcon,
     title: "AC Repair",
     body:
-      "Same-week AC service through Sacramento's dry heat. Capacitor, contactor, compressor, refrigerant leaks and drain-line diagnostics — repaired to spec rather than upsold to replacement.",
-    tags: ["Capacitor", "Compressor", "Refrigerant", "Drain"],
+      "Air conditioner blowing warm air, short-cycling, making a new noise, or not turning on at all? Sacramento summers don't leave much room to wait. Call and describe what the system is doing, and we'll get it diagnosed and running again.",
   },
   {
-    id: "III",
-    signal: "copper",
-    title: "Heating Installation",
+    icon: SnowIcon,
+    title: "AC Installation",
     body:
-      "Gas and electric furnace installs, high-efficiency conversions, and heat-pump crossovers. All permits pulled and inspected — nothing gets bolted to a plenum that wouldn't pass Sacramento County.",
-    tags: ["Furnace", "Heat pump", "Permits", "Inspected"],
+      "Adding central air or upgrading an old unit? We install new air conditioning systems for Sacramento homes and walk you through the options in plain language so you know what you're buying and why.",
   },
   {
-    id: "IV",
-    signal: "copper",
+    icon: FlameIcon,
     title: "Furnace Repair",
     body:
-      "Ignition, flame sensor, blower motor, gas valve and heat-exchanger diagnostics. Combustion analyzer on every call — carbon-monoxide safety is not a subscription, it's the baseline.",
-    tags: ["Ignition", "Blower", "CO test", "Diagnostics"],
+      "No heat, a furnace that won't stay lit, or one that runs but never warms the house? We repair residential furnaces and heating systems so your home is comfortable again when the cold nights come.",
   },
   {
-    id: "V",
-    signal: "brass",
-    title: "HVAC System Replacement",
+    icon: FlameIcon,
+    title: "Heating Installation",
     body:
-      "Full change-outs — furnace, coil, condenser and thermostat — done in a day for most homes. Old equipment hauled, ductwork sealed, new system commissioned with a written start-up report.",
-    tags: ["Change-out", "One-day", "Sealed duct", "Commissioned"],
+      "When it's time for a new furnace or heating system, we handle the installation from start to finish. You get a straight answer on what your home needs, not a sales pitch.",
   },
   {
-    id: "VI",
-    signal: "brass",
+    icon: RefreshIcon,
+    title: "Full HVAC System Replacement",
+    featured: true,
+    body:
+      "Replacing the whole heating and cooling system at once is one of the jobs customers mention most. If your system is older and the repairs keep adding up, we'll replace it with a new one and leave you with a home that heats and cools the way it should.",
+  },
+  {
+    icon: ClipboardIcon,
     title: "HVAC Maintenance",
     body:
-      "Twice-a-year tune-ups keep manufacturer warranties valid and equipment on-book. Coil wash, blower service, refrigerant check, capacitor read, thermostat calibration — same protocol, every visit.",
-    tags: ["Tune-up", "Coil wash", "Blower", "Warranty"],
+      "Regular tune-ups help catch small problems before they become breakdowns and keep your system running efficiently. A good time to schedule is spring for the AC and fall for the furnace.",
   },
 ];
 
-const PROCESS = [
+const FAQS = [
   {
-    time: "T-00",
-    label: "The call",
-    body:
-      "You reach Farid or a technician directly — no voicemail carousel. We ask about the symptom, the equipment tag, and the age of the house before quoting a visit window.",
-  },
-  {
-    time: "T-24",
-    label: "Home visit & load calc",
-    body:
-      "For any install, we measure. Square footage, window exposure, insulation and duct layout drive the sizing — never a rule-of-thumb guess.",
-  },
-  {
-    time: "T-48",
-    label: "Written quote",
-    body:
-      "Line-item quote, no bundled mystery fee. If a repair beats a replacement, we say so — even when the ticket is smaller.",
-  },
-  {
-    time: "T-72",
-    label: "Scheduled install",
-    body:
-      "Same crew, arrive on time, drop cloths and boot covers on. Ductwork sealed, refrigerant charge weighed in, thermostat paired.",
-  },
-  {
-    time: "T-96",
-    label: "Commissioning",
-    body:
-      "Combustion analyzer on gas furnaces. Static-pressure read. Refrigerant subcooling verified. A written start-up sheet goes in your service binder.",
-  },
-  {
-    time: "T+30",
-    label: "First-season follow-up",
-    body:
-      "A month after install, we call. Anything odd — a rattle, a smell, a temperature swing — we come back before it becomes a repair.",
-  },
-];
-
-const FAQ = [
-  {
-    q: "How long has Air Master been in Sacramento?",
-    a: "Since 1986. Farid Farahvash has led the shop for the full four decades, and the work runs on repeat customers and referrals — a Sacramento family HVAC company, not a franchise.",
+    q: "Where are you located?",
+    a: `Our shop is at ${BIZ.street}, ${BIZ.cityLine}, in South Sacramento. Most work happens at your home, so the easiest first step is to call ${BIZ.phone}.`,
   },
   {
     q: "What areas do you serve?",
-    a: "Sacramento and the surrounding metro — Elk Grove, Rancho Cordova, Citrus Heights, North Highlands, Arden-Arcade, Natomas, Rio Linda, Fair Oaks. Call to confirm if you're outside this ring.",
+    a: "Sacramento and the surrounding areas. If you're not sure whether we cover your neighborhood, give us a call and ask.",
   },
   {
-    q: "Do you charge for estimates on installs?",
-    a: "No. New-system estimates and full change-out quotes are free. Repair diagnostics carry a service-call fee, which we credit back if you approve the repair on the same visit.",
+    q: "How long have you been in business?",
+    a: `Since ${BIZ.since}. Air Master is a Sacramento family HVAC company led by owner ${BIZ.owner}, and has been taking care of local homes for ${YEARS} years.`,
   },
   {
-    q: "Are you licensed?",
-    a: "Yes — California HVAC contractor operating as Air Master Heat and Air, Inc. License and insurance details are shared before any work begins and appear on every written quote.",
+    q: "Do you work on homes or businesses?",
+    a: "Our focus is residential heating and air conditioning: repairs, new installations, full system replacements and maintenance for Sacramento homes.",
   },
   {
-    q: "How fast can you get out for a broken AC in July?",
-    a: "Same-day or next-morning through most of Sacramento's summer. We keep repair slots open specifically for outages, because 108°F afternoons don't wait for a scheduled tune-up.",
+    q: "Should I repair my system or replace it?",
+    a: "It depends on the age of the system, how often it has needed repairs, and what the repair would cost compared with a new unit. If your system is older and breaking down more often, replacement is often the better long-term value. We'll look at your system and give you an honest recommendation either way.",
   },
   {
-    q: "Do you handle full system replacements, or just repairs?",
-    a: "Both. Full change-outs — furnace, coil, condenser, thermostat — are done in a single day for most Sacramento homes. Repairs are handled to spec first; replacement is recommended only when the math no longer works.",
+    q: "How do I get a price for my job?",
+    a: `Call ${BIZ.phone} and tell us what's going on. We'll talk through the problem and set up a time to take a look. Customers often mention our reasonable pricing.`,
   },
   {
-    q: "What brands do you install?",
-    a: "Major residential HVAC brands with strong Sacramento parts availability — the equipment we install has to be serviceable in 15 years by any competent technician, not just us.",
-  },
-  {
-    q: "Do you offer maintenance plans?",
-    a: "Yes — a twice-a-year tune-up protocol that keeps manufacturer warranties valid and catches capacitor and refrigerant issues before they take a system down.",
+    q: "What are your hours?",
+    a: `Our hours aren't listed online yet. Call ${BIZ.phone} and we'll let you know when we can get to you.`,
   },
 ];
 
-const REVIEW_THEMES = [
+const STEPS = [
   {
-    context: "Full system replacement",
-    signal: "amber",
-    quote:
-      "Replaced the whole system; very good work and reasonably priced.",
+    title: "Call us",
+    body: `Call ${BIZ.phone} and tell us what your heating or AC is doing, or what you'd like installed.`,
   },
   {
-    context: "Reviewer summary — Birdeye",
-    signal: "copper",
-    quote:
-      "Quality work at reasonable prices.",
+    title: "We take a look",
+    body: "We set up a time to come out to your home and check the system.",
   },
   {
-    context: "Review theme — 4.7 stars",
-    signal: "brass",
-    quote:
-      "Sacramento family HVAC company, since 1986.",
+    title: "Straight answer",
+    body: "We explain what we found and your options, repair or replace, in plain language.",
+  },
+  {
+    title: "Job done right",
+    body: "The work gets done properly, and your home is comfortable again.",
   },
 ];
 
-export default function Page() {
-  const yearSpan = BUSINESS.now - BUSINESS.since;
+const NAV = [
+  ["Services", "#services"],
+  ["Reviews", "#reviews"],
+  ["About", "#about"],
+  ["Service Area", "#area"],
+  ["FAQ", "#faq"],
+] as const;
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "HVACBusiness",
-    name: BUSINESS.legal,
-    image: undefined,
-    telephone: BUSINESS.phone,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "3513 La Grande Blvd",
-      addressLocality: "Sacramento",
-      addressRegion: "CA",
-      postalCode: "95823",
-      addressCountry: "US",
-    },
-    areaServed: BUSINESS.serviceArea,
-    foundingDate: `${BUSINESS.since}`,
-    founder: { "@type": "Person", name: BUSINESS.owner },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: `${BUSINESS.rating}`,
-      reviewCount: `${BUSINESS.reviewCount}`,
-    },
-    priceRange: "$$",
-    description:
-      "Sacramento residential HVAC contractor since 1986. Full system replacements, AC and furnace repair, installation, and maintenance.",
-  };
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "HVACBusiness",
+  name: BIZ.name,
+  telephone: "+1-916-399-1585",
+  foundingDate: String(BIZ.since),
+  founder: { "@type": "Person", name: BIZ.owner },
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: BIZ.street,
+    addressLocality: "Sacramento",
+    addressRegion: "CA",
+    postalCode: "95823",
+    addressCountry: "US",
+  },
+  areaServed: "Sacramento, CA and surrounding areas",
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: BIZ.rating,
+    reviewCount: BIZ.reviewCount,
+  },
+};
 
+function SectionHeading({
+  eyebrow,
+  title,
+  children,
+  center = false,
+}: {
+  eyebrow: string;
+  title: string;
+  children?: ReactNode;
+  center?: boolean;
+}) {
+  return (
+    <div className={center ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
+      <p className="text-sm font-bold uppercase tracking-wider text-orange">{eyebrow}</p>
+      <h2 className="mt-2 text-3xl font-black md:text-4xl">{title}</h2>
+      {children && <p className="mt-4 text-lg text-ink-2">{children}</p>}
+    </div>
+  );
+}
+
+export default function Home() {
   return (
     <>
-      <Script
-        id="ld-json"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      {/* ============ HEADER ============ */}
-      <header className="relative z-40 pt-6">
-        <div className="mx-auto max-w-[100rem] px-6 md:px-10 flex items-center justify-between">
-          <a href="#top" className="flex items-baseline gap-2">
-            <span className="font-display text-[1.35rem] leading-none font-semibold tracking-tight text-[color:var(--cream)]">
-              Air Master
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2"
+      >
+        Skip to content
+      </a>
+
+      {/* Utility strip */}
+      <div className="hidden bg-navy-deep text-sm text-white/90 md:block">
+        <div className="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-2">
+          <span className="inline-flex items-center gap-2">
+            <PinIcon className="h-4 w-4" /> Serving Sacramento and surrounding areas
+          </span>
+          <span>Family-owned since {BIZ.since}</span>
+        </div>
+      </div>
+
+      {/* Sticky header */}
+      <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
+        <div className="mx-auto flex max-w-[1200px] items-center justify-between gap-4 px-4 py-3 md:px-6">
+          <a href="#top" className="flex items-center gap-2.5" aria-label="Air Master Heat and Air, home">
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-navy text-white">
+              <SnowIcon className="h-5 w-5" />
             </span>
-            <span className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--sand)]">
-              Heat &amp; Air · Est. 1986
+            <span className="leading-tight">
+              <span className="block whitespace-nowrap font-heading text-lg font-black text-navy-deep">Air Master</span>
+              <span className="block whitespace-nowrap text-xs font-semibold text-ink-2">Heat and Air, Inc.</span>
             </span>
           </a>
-          <nav className="hidden md:flex items-center gap-8 text-[0.78rem] font-mono uppercase tracking-[0.22em] text-[color:var(--cream-2)]">
-            <a href="#since" className="hover:text-[color:var(--amber)] transition-colors duration-300" style={{ transitionTimingFunction: "cubic-bezier(0.23,1,0.32,1)" }}>Since 1986</a>
-            <a href="#services" className="hover:text-[color:var(--amber)] transition-colors duration-300">Services</a>
-            <a href="#process" className="hover:text-[color:var(--amber)] transition-colors duration-300">Process</a>
-            <a href="#standards" className="hover:text-[color:var(--amber)] transition-colors duration-300">Standards</a>
-            <a href="#contact" className="hover:text-[color:var(--amber)] transition-colors duration-300">Contact</a>
+          <nav className="hidden items-center gap-6 font-semibold text-ink lg:flex" aria-label="Main">
+            {NAV.map(([label, href]) => (
+              <a key={href} href={href} className="transition-colors hover:text-orange">
+                {label}
+              </a>
+            ))}
           </nav>
-          <a
-            href={BUSINESS.phoneHref}
-            className="group inline-flex items-center gap-3 rounded-full border border-[color:var(--hairline-2)] bg-[color:var(--ink-2)] pl-4 pr-1.5 py-1.5 hover:border-[color:var(--amber)] transition-all duration-500"
-            style={{ transitionTimingFunction: "cubic-bezier(0.23,1,0.32,1)" }}
-          >
-            <span className="relative flex items-center gap-2">
-              <span className="pulse-dot inline-block w-2 h-2 rounded-full bg-[color:var(--amber)]" />
-              <span className="font-mono text-[0.72rem] uppercase tracking-[0.22em] text-[color:var(--cream)]">
-                {BUSINESS.phone}
-              </span>
-            </span>
-            <span className="ml-1 inline-flex items-center justify-center w-8 h-8 rounded-full bg-[color:var(--amber)] text-[color:var(--ink)] group-hover:translate-x-[1px] group-hover:-translate-y-[1px] transition-transform duration-500" style={{ transitionTimingFunction: "cubic-bezier(0.23,1,0.32,1)" }}>
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
-                <path d="M6 18L18 6M9 6h9v9" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
-          </a>
+          <div className="flex items-center gap-3">
+            <a
+              href={BIZ.phoneHref}
+              className="hidden font-bold text-navy-deep transition-colors hover:text-orange md:inline"
+            >
+              {BIZ.phone}
+            </a>
+            <a href={BIZ.phoneHref} className="btn btn-primary hidden sm:inline-flex">
+              <PhoneIcon className="h-5 w-5" /> Call Now
+            </a>
+            <a
+              href={BIZ.phoneHref}
+              className="flex h-11 w-11 items-center justify-center rounded-lg bg-orange text-white sm:hidden"
+              aria-label={`Call ${BIZ.phone}`}
+            >
+              <PhoneIcon className="h-5 w-5" />
+            </a>
+          </div>
         </div>
       </header>
 
-      {/* ============ HERO — EDITORIAL SPLIT ============ */}
-      <section id="top" className="relative z-10 pt-24 pb-32">
-        <div className="mx-auto max-w-[100rem] px-6 md:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-20 items-start">
-            <div className="lg:col-span-8">
-              <Reveal>
-                <div className="inline-flex items-center gap-3 rounded-full border border-[color:var(--hairline-2)] px-3.5 py-1.5 mb-10">
-                  <span className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--brass)]">
-                    Vol. XL · Sacramento · Est. 1986
-                  </span>
-                </div>
-              </Reveal>
-              <Reveal delay={80}>
-                <h1 className="font-display font-medium leading-[0.90] tracking-[-0.03em] text-[15vw] md:text-[10.5vw] lg:text-[8.5rem] xl:text-[10rem] text-[color:var(--cream)]">
-                  Sacramento&apos;s
-                  <br />
-                  <span className="italic font-light text-[color:var(--sand)]">heat &amp; air,</span>
-                  <br />
-                  kept honest
-                  <br />
-                  <span className="text-[color:var(--amber)]">since 1986</span>
-                  <span className="text-[color:var(--amber)]">.</span>
-                </h1>
-              </Reveal>
-              <Reveal delay={200}>
-                <p className="mt-10 max-w-2xl font-body text-lg md:text-xl leading-relaxed text-[color:var(--cream-2)]">
-                  Four decades of Sacramento heat waves, Delta breezes, and Tule-fog mornings — the same family shop, the same phone number, the same technician who tells you if a repair beats a replacement. Owner-led by <span className="text-[color:var(--brass)]">{BUSINESS.owner}</span>.
-                </p>
-              </Reveal>
-              <Reveal delay={320}>
-                <div className="mt-10 flex flex-wrap items-center gap-3">
-                  <a
-                    href={BUSINESS.phoneHref}
-                    className="group inline-flex items-center gap-3 rounded-full bg-[color:var(--amber)] pl-6 pr-1.5 py-1.5 text-[color:var(--ink)] font-semibold transition-all duration-500 hover:bg-[color:var(--gold)] active:scale-[0.98]"
-                    style={{ transitionTimingFunction: "cubic-bezier(0.23,1,0.32,1)" }}
-                  >
-                    <span className="font-display text-base tracking-tight">Call Farid — {BUSINESS.phone}</span>
-                    <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-[color:var(--ink)] text-[color:var(--amber)] group-hover:translate-x-[1px] group-hover:-translate-y-[1px] transition-transform duration-500">
-                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
-                        <path d="M6 18L18 6M9 6h9v9" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </span>
-                  </a>
-                  <a href="#services" className="inline-flex items-center gap-2 rounded-full border border-[color:var(--hairline-2)] px-5 py-3 font-mono text-[0.72rem] uppercase tracking-[0.22em] text-[color:var(--cream)] hover:border-[color:var(--copper)] hover:text-[color:var(--copper)] transition-all duration-500">
-                    Six services →
-                  </a>
-                </div>
-              </Reveal>
-            </div>
-
-            {/* Right column — asymmetric trust column */}
-            <div className="lg:col-span-4 flex flex-col gap-4">
-              <Reveal delay={140}>
-                <div className="bezel">
-                  <div className="bezel-inner p-7">
-                    <div className="flex items-baseline justify-between mb-4">
-                      <span className="font-mono text-[0.66rem] uppercase tracking-[0.28em] text-[color:var(--sand)]">A · Tenure</span>
-                      <span className="font-mono text-[0.66rem] text-[color:var(--brass)]">1986 → 2026</span>
-                    </div>
-                    <div className="font-display text-[7rem] leading-none tracking-[-0.04em] text-[color:var(--brass)]">
-                      {yearSpan}
-                    </div>
-                    <div className="mt-3 font-body text-sm text-[color:var(--cream-2)]">
-                      Years of Sacramento residential HVAC — one shop, one family, one phone number.
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-
-              <Reveal delay={220}>
-                <div className="bezel">
-                  <div className="bezel-inner p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="font-mono text-[0.66rem] uppercase tracking-[0.28em] text-[color:var(--sand)]">B · Rating</span>
-                      <span className="pulse-dot inline-block w-2 h-2 rounded-full bg-[color:var(--amber)]" />
-                    </div>
-                    <div className="flex items-baseline gap-3">
-                      <div className="font-display text-5xl font-semibold text-[color:var(--cream)]">{BUSINESS.rating.toFixed(1)}</div>
-                      <div className="font-mono text-[0.72rem] uppercase tracking-[0.2em] text-[color:var(--copper)]">
-                        {"★".repeat(5)} · {BUSINESS.reviewCount} reviews
-                      </div>
-                    </div>
-                    <div className="mt-3 font-body text-sm text-[color:var(--cream-2)]">
-                      Small, honest review pool — every one from a real Sacramento home.
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-
-              <Reveal delay={300}>
-                <div className="bezel">
-                  <div className="bezel-inner p-6">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="font-mono text-[0.66rem] uppercase tracking-[0.28em] text-[color:var(--sand)]">C · Now on-call</span>
-                      <span className="font-mono text-[0.66rem] uppercase tracking-[0.28em] text-[color:var(--amber)]">Live</span>
-                    </div>
-                    <div className="font-display text-2xl font-medium text-[color:var(--cream)]">Farid Farahvash</div>
-                    <div className="mt-1 font-body text-sm text-[color:var(--cream-2)]">
-                      Owner. Answers the phone.
-                    </div>
-                    <div className="mt-4 pt-4 border-t border-[color:var(--hairline)] flex items-center justify-between">
-                      <span className="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-[color:var(--sand)]">Sacramento, CA</span>
-                      <span className="font-mono text-[0.68rem] uppercase tracking-[0.22em] text-[color:var(--brass)]">40 yr trade</span>
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============ MARQUEE — SIGNAL BAND ============ */}
-      <section aria-hidden className="relative z-10 border-y border-[color:var(--hairline)] bg-[color:var(--ink-2)] py-5 overflow-hidden">
-        <div className="marquee-track flex items-center gap-16 whitespace-nowrap will-change-transform">
-          {Array.from({ length: 2 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-16 font-mono text-[0.78rem] uppercase tracking-[0.28em] text-[color:var(--cream-2)]">
-              <span>Central AC</span><span className="text-[color:var(--amber)]">●</span>
-              <span>Gas Furnace</span><span className="text-[color:var(--copper)]">●</span>
-              <span>Heat Pump Change-Out</span><span className="text-[color:var(--brass)]">●</span>
-              <span>Coil Wash</span><span className="text-[color:var(--amber)]">●</span>
-              <span>Duct Sealing</span><span className="text-[color:var(--copper)]">●</span>
-              <span>Refrigerant Recharge</span><span className="text-[color:var(--brass)]">●</span>
-              <span>Thermostat Pairing</span><span className="text-[color:var(--amber)]">●</span>
-              <span>Combustion Analysis</span><span className="text-[color:var(--copper)]">●</span>
-              <span>Since 1986</span><span className="text-[color:var(--brass)]">●</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ============ SINCE 1986 — YEAR-SPAN CHAPTER ============ */}
-      <section id="since" className="relative z-10 py-32">
-        <div className="mx-auto max-w-[100rem] px-6 md:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-end">
-            <div className="lg:col-span-5">
-              <Reveal>
-                <div className="flex items-center gap-3 mb-8">
-                  <span className="font-mono text-[0.68rem] uppercase tracking-[0.32em] text-[color:var(--brass)]">§ I</span>
-                  <span className="h-px w-16 bg-[color:var(--hairline-2)]" />
-                  <span className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--sand)]">The tenure column</span>
-                </div>
-              </Reveal>
-              <Reveal delay={100}>
-                <div className="font-display font-light leading-none tracking-[-0.04em] flex items-baseline gap-6">
-                  <span className="text-[6rem] md:text-[8rem] text-[color:var(--cream)]">1986</span>
-                  <span className="font-mono text-[color:var(--sand)] text-3xl">→</span>
-                  <span className="text-[6rem] md:text-[8rem] text-[color:var(--amber)]">2026</span>
-                </div>
-              </Reveal>
-              <Reveal delay={200}>
-                <p className="mt-8 font-body text-lg text-[color:var(--cream-2)] leading-relaxed max-w-lg">
-                  The shop started in the year the Kings arrived from Kansas City. It has outlasted seven mayors, four building codes, and three refrigerant standards. Same family. Same phone number. Same commitment to a system that will still work in fifteen years.
-                </p>
-              </Reveal>
-            </div>
-            <div className="lg:col-span-7 lg:pl-12">
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { yr: "1986", note: "Air Master opens — La Grande Blvd, South Sacramento" },
-                  { yr: "1994", note: "R-22 era peaks; first HVAC efficiency ratings appear" },
-                  { yr: "2006", note: "Sacramento Title 24 tightens; load-calc becomes the shop standard" },
-                  { yr: "2020", note: "R-410A crosses over; heat-pump conversions accelerate" },
-                  { yr: "2024", note: "Farid still on-call — 38 unbroken years at the helm" },
-                  { yr: "2026", note: "Fortieth year — same shop, same phone number" },
-                ].map((e, i) => (
-                  <Reveal key={e.yr} delay={80 + i * 60}>
-                    <div className="bezel">
-                      <div className="bezel-inner p-5">
-                        <div className="font-mono text-[0.66rem] uppercase tracking-[0.28em] text-[color:var(--copper)]">Milestone · {String(i + 1).padStart(2, "0")}</div>
-                        <div className="mt-2 font-display text-3xl font-medium text-[color:var(--brass)]">{e.yr}</div>
-                        <div className="mt-2 font-body text-sm text-[color:var(--cream-2)] leading-snug">{e.note}</div>
-                      </div>
-                    </div>
-                  </Reveal>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============ SERVICES — DETAIL CARDS (Bento asymmetry) ============ */}
-      <section id="services" className="relative z-10 py-32 border-t border-[color:var(--hairline)]">
-        <div className="mx-auto max-w-[100rem] px-6 md:px-10">
-          <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-8 mb-16">
-            <Reveal>
-              <div>
-                <div className="flex items-center gap-3 mb-6">
-                  <span className="font-mono text-[0.68rem] uppercase tracking-[0.32em] text-[color:var(--brass)]">§ II</span>
-                  <span className="h-px w-16 bg-[color:var(--hairline-2)]" />
-                  <span className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--sand)]">The service ledger</span>
-                </div>
-                <h2 className="font-display font-medium leading-[0.95] tracking-[-0.03em] text-5xl md:text-7xl text-[color:var(--cream)]">
-                  Six protocols.<br />
-                  <span className="italic font-light text-[color:var(--sand)]">One family shop.</span>
-                </h2>
-              </div>
-            </Reveal>
-            <Reveal delay={120}>
-              <p className="max-w-sm font-body text-base text-[color:var(--cream-2)] leading-relaxed">
-                Residential heating and air across the Sacramento metro — the six protocols we&apos;ve refined over forty years. Each one written down. Each one measurable. Each one owner-signed.
+      <main id="main" className="pb-20 md:pb-0">
+        {/* Hero */}
+        <section id="top" className="bg-gradient-to-b from-navy-tint to-white">
+          <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-14 md:px-6 md:py-20 lg:grid-cols-[1.25fr_1fr] lg:items-center">
+            <div>
+              <p className="inline-flex items-center gap-2 rounded-full bg-navy-soft px-3 py-1 text-sm font-semibold text-navy">
+                <HomeIcon className="h-4 w-4" /> Sacramento family HVAC company since {BIZ.since}
               </p>
-            </Reveal>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
-            {SERVICES.map((s, i) => {
-              const wide = i === 0 || i === 4;
-              return (
-                <Reveal key={s.id} delay={60 + i * 60}>
-                  <div className={`bezel h-full ${wide ? "md:col-span-4" : "md:col-span-2"}`}>
-                    <div className="bezel-inner p-7 h-full flex flex-col">
-                      <div className="flex items-baseline justify-between mb-4">
-                        <span
-                          className="font-mono text-[0.66rem] uppercase tracking-[0.32em]"
-                          style={{ color: `var(--${s.signal})` }}
-                        >
-                          Protocol {s.id}
-                        </span>
-                        <span
-                          className="pulse-dot inline-block w-1.5 h-1.5 rounded-full"
-                          style={{ background: `var(--${s.signal})` }}
-                        />
-                      </div>
-                      <h3 className="font-display text-3xl md:text-4xl font-medium tracking-tight text-[color:var(--cream)]">
-                        {s.title}
-                      </h3>
-                      <p className="mt-4 font-body text-[15px] text-[color:var(--cream-2)] leading-relaxed">
-                        {s.body}
-                      </p>
-                      <div className="mt-6 pt-5 border-t border-[color:var(--hairline)] flex flex-wrap gap-2">
-                        {s.tags.map((t) => (
-                          <span key={t} className="font-mono text-[0.66rem] uppercase tracking-[0.2em] text-[color:var(--sand)] border border-[color:var(--hairline-2)] rounded-full px-2.5 py-1">
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </Reveal>
-              );
-            })}
-          </div>
-
-          <div className="lg:col-span-4" />
-        </div>
-      </section>
-
-      {/* ============ PROCESS — NUMBERED T-CODE ============ */}
-      <section id="process" className="relative z-10 py-32 bg-[color:var(--ink-2)] border-y border-[color:var(--hairline)]">
-        <div className="mx-auto max-w-[100rem] px-6 md:px-10">
-          <div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-8 mb-16">
-            <Reveal>
-              <div>
-                <div className="flex items-center gap-3 mb-6">
-                  <span className="font-mono text-[0.68rem] uppercase tracking-[0.32em] text-[color:var(--brass)]">§ III</span>
-                  <span className="h-px w-16 bg-[color:var(--hairline-2)]" />
-                  <span className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--sand)]">Call · to · commissioning</span>
-                </div>
-                <h2 className="font-display font-medium leading-[0.95] tracking-[-0.03em] text-5xl md:text-7xl text-[color:var(--cream)]">
-                  Six steps<br />
-                  <span className="italic font-light text-[color:var(--sand)]">start to warm.</span>
-                </h2>
-              </div>
-            </Reveal>
-            <Reveal delay={120}>
-              <p className="max-w-sm font-body text-base text-[color:var(--cream-2)] leading-relaxed">
-                Every install and full-system replacement runs this timeline. Nothing skipped, nothing rushed — and everything written on paper you keep.
+              <h1 className="mt-5 text-[clamp(2.25rem,5vw,3.6rem)] font-black">
+                Heating &amp; Air Conditioning Repair and Installation in Sacramento
+              </h1>
+              <p className="mt-5 max-w-xl text-lg text-ink-2 md:text-xl">
+                AC and furnace repair, new installations and full system replacements for Sacramento
+                homes. Air Master has served Sacramento since {BIZ.since}, led by owner {BIZ.owner},
+                and customers keep saying the same thing: quality work at reasonable prices.
               </p>
-            </Reveal>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {PROCESS.map((p, i) => (
-              <Reveal key={p.time} delay={60 + i * 60}>
-                <div className="bezel h-full">
-                  <div className="bezel-inner p-7 h-full flex flex-col">
-                    <div className="flex items-baseline justify-between mb-6">
-                      <span className="font-mono text-[0.7rem] uppercase tracking-[0.3em] text-[color:var(--copper)]">
-                        {p.time}
-                      </span>
-                      <span className="font-display text-6xl font-light text-[color:var(--brass)] leading-none tracking-[-0.04em]">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                    </div>
-                    <h3 className="font-display text-2xl font-medium text-[color:var(--cream)] leading-tight">
-                      {p.label}
-                    </h3>
-                    <p className="mt-3 font-body text-[15px] text-[color:var(--cream-2)] leading-relaxed">
-                      {p.body}
-                    </p>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ============ REVIEW THEMES — PULL-QUOTE + CARD SET ============ */}
-      <section id="reviews" className="relative z-10 py-32">
-        <div className="mx-auto max-w-[100rem] px-6 md:px-10">
-          <Reveal>
-            <div className="flex items-center gap-3 mb-8">
-              <span className="font-mono text-[0.68rem] uppercase tracking-[0.32em] text-[color:var(--brass)]">§ IV</span>
-              <span className="h-px w-16 bg-[color:var(--hairline-2)]" />
-              <span className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--sand)]">What Sacramento says</span>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <a href={BIZ.phoneHref} className="btn btn-primary text-lg">
+                  <PhoneIcon className="h-5 w-5" /> Call {BIZ.phone}
+                </a>
+                <a href="#services" className="btn btn-outline text-lg">
+                  See our services
+                </a>
+              </div>
+              <p className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 text-ink">
+                <Stars />
+                <span>
+                  <strong>{BIZ.rating}</strong> from {BIZ.reviewCount} customer reviews
+                </span>
+                <span className="text-line" aria-hidden="true">|</span>
+                <span>Since {BIZ.since}</span>
+                <span className="text-line" aria-hidden="true">|</span>
+                <span>Family-owned</span>
+              </p>
             </div>
-          </Reveal>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-8">
-              <Reveal delay={100}>
-                <blockquote className="font-display font-light leading-[1.02] tracking-[-0.03em] text-[8vw] md:text-[5rem] text-[color:var(--cream)]">
-                  <span className="text-[color:var(--amber)]">“</span>Replaced the whole system;<br />
-                  <span className="italic text-[color:var(--sand)]">very good work</span> and reasonably priced.<span className="text-[color:var(--amber)]">”</span>
+
+            <div className="space-y-4">
+              <figure className="card p-6 md:p-7">
+                <Stars />
+                <blockquote className="mt-3 font-heading text-xl font-bold leading-snug text-navy-deep">
+                  Had the whole system replaced: very good work, and reasonably priced.
                 </blockquote>
-              </Reveal>
-              <Reveal delay={200}>
-                <div className="mt-8 flex items-center gap-4">
-                  <div className="font-mono text-[0.72rem] uppercase tracking-[0.28em] text-[color:var(--copper)]">
-                    Sacramento homeowner · full system replacement · Birdeye
-                  </div>
-                </div>
-              </Reveal>
-            </div>
-            <div className="lg:col-span-4 space-y-4">
-              {REVIEW_THEMES.map((t, i) => (
-                <Reveal key={i} delay={140 + i * 60}>
-                  <div className="bezel">
-                    <div className="bezel-inner p-6">
-                      <div className="flex items-center justify-between mb-3">
-                        <span
-                          className="font-mono text-[0.66rem] uppercase tracking-[0.28em]"
-                          style={{ color: `var(--${t.signal})` }}
-                        >
-                          {t.context}
-                        </span>
-                        <span
-                          className="inline-block w-1.5 h-1.5 rounded-full"
-                          style={{ background: `var(--${t.signal})` }}
-                        />
-                      </div>
-                      <p className="font-body text-[15px] text-[color:var(--cream)] leading-snug italic">
-                        &ldquo;{t.quote}&rdquo;
-                      </p>
+                <figcaption className="mt-4 text-sm text-ink-2">
+                  From a customer review &middot; Full system replacement
+                </figcaption>
+              </figure>
+              <div className="card p-6">
+                <h2 className="font-body text-sm font-bold uppercase tracking-wider text-navy">
+                  Quick facts
+                </h2>
+                <dl className="mt-3 space-y-3 text-[0.98rem]">
+                  <div className="flex gap-3">
+                    <CalendarIcon className="h-5 w-5 shrink-0 text-navy" />
+                    <div>
+                      <dt className="sr-only">In business since</dt>
+                      <dd>Serving Sacramento since {BIZ.since}</dd>
                     </div>
                   </div>
+                  <div className="flex gap-3">
+                    <PinIcon className="h-5 w-5 shrink-0 text-navy" />
+                    <div>
+                      <dt className="sr-only">Address</dt>
+                      <dd>
+                        {BIZ.street}, {BIZ.cityLine}
+                      </dd>
+                    </div>
+                  </div>
+                  <div className="flex gap-3">
+                    <PhoneIcon className="h-5 w-5 shrink-0 text-navy" />
+                    <div>
+                      <dt className="sr-only">Phone</dt>
+                      <dd>
+                        <a href={BIZ.phoneHref} className="font-bold text-navy-deep underline-offset-4 hover:underline">
+                          {BIZ.phone}
+                        </a>
+                      </dd>
+                    </div>
+                  </div>
+                </dl>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Trust bar */}
+        <section className="bg-navy text-white" aria-label="Why customers trust Air Master">
+          <ul className="mx-auto grid max-w-[1200px] grid-cols-2 gap-6 px-4 py-8 md:grid-cols-4 md:px-6">
+            {[
+              { icon: <Stars className="h-4 w-4" />, label: `${BIZ.rating}-star rating`, sub: `${BIZ.reviewCount} customer reviews` },
+              { icon: <CalendarIcon className="h-6 w-6 text-amber" />, label: `Since ${BIZ.since}`, sub: `${YEARS} years in Sacramento` },
+              { icon: <UsersIcon className="h-6 w-6 text-amber" />, label: "Family-owned", sub: `Led by ${BIZ.owner}` },
+              { icon: <HomeIcon className="h-6 w-6 text-amber" />, label: "Residential HVAC", sub: "Heating and cooling" },
+            ].map((item) => (
+              <li key={item.label} className="flex items-start gap-3">
+                <span className="mt-0.5">{item.icon}</span>
+                <span>
+                  <span className="block font-bold">{item.label}</span>
+                  <span className="block text-sm text-white/80">{item.sub}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* Services */}
+        <section id="services" className="bg-white py-16 md:py-24">
+          <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+            <SectionHeading eyebrow="Our services" title="Heating and Cooling Services in Sacramento">
+              From a quick AC repair on a hot afternoon to replacing an entire system, Air Master
+              handles residential heating and air conditioning work of every size.
+            </SectionHeading>
+            <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {SERVICES.map((s, i) => (
+                <Reveal key={s.title} delay={i * 50}>
+                  <article
+                    className={`card flex h-full flex-col p-6 transition-shadow duration-200 hover:shadow-lg ${
+                      s.featured ? "border-2 border-navy" : ""
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-navy-soft text-navy">
+                        <s.icon />
+                      </span>
+                    </div>
+                    <h3 className="mt-5 text-xl font-bold">{s.title}</h3>
+                    <p className="mt-3 flex-1 text-ink-2">{s.body}</p>
+                    <a
+                      href={BIZ.phoneHref}
+                      className="mt-5 inline-flex items-center gap-1.5 font-bold text-navy hover:text-orange"
+                    >
+                      Call about this <ArrowRight className="h-4 w-4" />
+                    </a>
+                  </article>
                 </Reveal>
               ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* ============ STANDARDS — LONG-FORM DARK BAND ============ */}
-      <section id="standards" className="relative z-10 py-32 bg-[color:var(--ink-2)] border-y border-[color:var(--hairline)]">
-        <div className="mx-auto max-w-6xl px-6 md:px-10">
-          <Reveal>
-            <div className="flex items-center gap-3 mb-8">
-              <span className="font-mono text-[0.68rem] uppercase tracking-[0.32em] text-[color:var(--brass)]">§ V</span>
-              <span className="h-px w-16 bg-[color:var(--hairline-2)]" />
-              <span className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--sand)]">Farid&apos;s standards column</span>
-            </div>
-          </Reveal>
-          <Reveal delay={100}>
-            <h2 className="font-display font-medium leading-[0.95] tracking-[-0.03em] text-5xl md:text-6xl text-[color:var(--cream)] max-w-4xl">
-              A system that will<br />
-              <span className="italic font-light text-[color:var(--sand)]">still work in fifteen years.</span>
-            </h2>
-          </Reveal>
-          <div className="mt-14 grid grid-cols-1 md:grid-cols-2 gap-14">
-            <Reveal delay={160}>
-              <p className="font-body text-lg leading-[1.7] text-[color:var(--cream-2)]">
-                <span className="font-display float-left text-7xl leading-[0.85] mr-3 mt-1 text-[color:var(--brass)]">F</span>orty years of Sacramento homes have taught us the same lesson over and over: the cheapest fix on Tuesday is often the most expensive fix by August. So we don&apos;t rule-of-thumb size systems, we don&apos;t skip the load calculation, and we don&apos;t recommend a replacement when a repair still has good years left in it. The math has to work — for our shop and for your household.
-              </p>
-            </Reveal>
-            <Reveal delay={220}>
-              <div className="space-y-6">
-                <p className="font-body text-lg leading-[1.7] text-[color:var(--cream-2)]">
-                  Every install is commissioned. Refrigerant charges are weighed in, not eyeballed. Combustion analyzers on every gas furnace call. Static-pressure reads on the return trunk. Every number recorded on a start-up sheet you keep — because in fifteen years, when a different technician opens the panel, that sheet is what tells them what shape the system was in the day we left it.
-                </p>
-                <p className="font-body text-lg leading-[1.7] text-[color:var(--cream-2)]">
-                  Reviews call it &ldquo;<span className="text-[color:var(--gold)] italic">quality work at reasonable prices</span>&rdquo;. What that means, in our shop, is that we quote the honest number, we do the honest work, and we sign our name — <span className="text-[color:var(--brass)]">{BUSINESS.owner}</span> — to the invoice.
-                </p>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* ============ FAQ — ACCORDION ============ */}
-      <section id="faq" className="relative z-10 py-32">
-        <div className="mx-auto max-w-[100rem] px-6 md:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-            <div className="lg:col-span-4">
+        {/* Reviews */}
+        <section id="reviews" className="bg-navy-tint py-16 md:py-24">
+          <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+            <SectionHeading
+              eyebrow="Reviews"
+              title={`Rated ${BIZ.rating} out of 5 from ${BIZ.reviewCount} Customer Reviews`}
+              center
+            >
+              Two things come up again and again when Sacramento homeowners talk about Air Master:
+              the quality of the work, and the fair price.
+            </SectionHeading>
+            <div className="mt-12 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
               <Reveal>
-                <div className="flex items-center gap-3 mb-8">
-                  <span className="font-mono text-[0.68rem] uppercase tracking-[0.32em] text-[color:var(--brass)]">§ VI</span>
-                  <span className="h-px w-16 bg-[color:var(--hairline-2)]" />
-                  <span className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--sand)]">Questions we get</span>
-                </div>
+                <figure className="card h-full p-8 md:p-10">
+                  <Stars className="h-6 w-6" />
+                  <blockquote className="mt-4 font-heading text-2xl font-bold leading-snug text-navy-deep md:text-3xl">
+                    Had the whole system replaced: very good work, and reasonably priced.
+                  </blockquote>
+                  <figcaption className="mt-5 text-ink-2">
+                    From a customer review &middot; Full HVAC system replacement
+                  </figcaption>
+                </figure>
               </Reveal>
-              <Reveal delay={100}>
-                <h2 className="font-display font-medium leading-[0.95] tracking-[-0.03em] text-5xl md:text-6xl text-[color:var(--cream)]">
-                  What Sacramento<br />
-                  <span className="italic font-light text-[color:var(--sand)]">homeowners ask.</span>
-                </h2>
-              </Reveal>
-              <Reveal delay={200}>
-                <p className="mt-8 font-body text-base text-[color:var(--cream-2)] leading-relaxed max-w-md">
-                  Forty years of the same questions in July, and different ones in January. Here&apos;s what most callers want to know before we roll a truck.
-                </p>
-              </Reveal>
-            </div>
-            <div className="lg:col-span-8">
-              <Faq items={FAQ} />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ============ CONTACT — PHONE-CARD HERO + SPLIT ============ */}
-      <section id="contact" className="relative z-10 py-32 bg-[color:var(--ink-2)] border-t border-[color:var(--hairline)]">
-        <div className="mx-auto max-w-[100rem] px-6 md:px-10">
-          <Reveal>
-            <div className="flex items-center gap-3 mb-8">
-              <span className="font-mono text-[0.68rem] uppercase tracking-[0.32em] text-[color:var(--brass)]">§ VII</span>
-              <span className="h-px w-16 bg-[color:var(--hairline-2)]" />
-              <span className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--sand)]">The direct line</span>
-            </div>
-          </Reveal>
-          <Reveal delay={100}>
-            <div className="bezel">
-              <div className="bezel-inner p-10 md:p-16">
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-                  <div className="lg:col-span-8">
-                    <p className="font-mono text-[0.72rem] uppercase tracking-[0.28em] text-[color:var(--copper)] mb-6">
-                      Answering right now — <span className="text-[color:var(--amber)]">●</span> live
-                    </p>
-                    <a
-                      href={BUSINESS.phoneHref}
-                      className="group inline-block font-display font-medium leading-none tracking-[-0.05em] text-[color:var(--cream)] hover:text-[color:var(--amber)] transition-colors duration-500"
-                      style={{ transitionTimingFunction: "cubic-bezier(0.23,1,0.32,1)", fontSize: "clamp(3rem, 9vw, 8rem)" }}
-                    >
-                      {BUSINESS.phone}
-                    </a>
-                    <p className="mt-8 font-body text-lg text-[color:var(--cream-2)] max-w-xl leading-relaxed">
-                      Farid or a technician picks up. No voicemail carousel, no offshore call center. If it&apos;s an outage, we say so — and we schedule same-day when we can.
-                    </p>
-                  </div>
-                  <div className="lg:col-span-4 space-y-4">
-                    <div className="border-t border-[color:var(--hairline)] pt-4">
-                      <div className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--sand)] mb-1">Shop</div>
-                      <div className="font-body text-base text-[color:var(--cream)]">3513 La Grande Blvd<br />Sacramento, CA 95823</div>
-                    </div>
-                    <div className="border-t border-[color:var(--hairline)] pt-4">
-                      <div className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--sand)] mb-1">Service area</div>
-                      <div className="font-body text-base text-[color:var(--cream)]">Sacramento &amp; the surrounding metro — Elk Grove, Rancho Cordova, Citrus Heights, North Highlands, Natomas, Arden-Arcade, Rio Linda, Fair Oaks.</div>
-                    </div>
-                    <div className="border-t border-[color:var(--hairline)] pt-4">
-                      <div className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--sand)] mb-1">Owner</div>
-                      <div className="font-body text-base text-[color:var(--cream)]">{BUSINESS.owner} · on-call since 1986</div>
-                    </div>
-                    <div className="border-t border-[color:var(--hairline)] pt-4">
-                      <div className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--sand)] mb-1">Licensing</div>
-                      <div className="font-body text-base text-[color:var(--cream)]">California HVAC contractor · fully licensed &amp; insured. Details shared before any work begins.</div>
+              <div className="grid gap-6">
+                <Reveal delay={60}>
+                  <div className="card flex gap-4 p-6">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-navy-soft text-navy">
+                      <WrenchIcon />
+                    </span>
+                    <div>
+                      <h3 className="text-lg font-bold">Quality work</h3>
+                      <p className="mt-1 text-ink-2">
+                        Customers describe well-done installations and repairs, including complete
+                        system replacements.
+                      </p>
                     </div>
                   </div>
-                </div>
+                </Reveal>
+                <Reveal delay={120}>
+                  <div className="card flex gap-4 p-6">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-navy-soft text-navy">
+                      <TagIcon />
+                    </span>
+                    <div>
+                      <h3 className="text-lg font-bold">Reasonable prices</h3>
+                      <p className="mt-1 text-ink-2">
+                        Fair pricing is the other theme reviewers mention.
+                      </p>
+                    </div>
+                  </div>
+                </Reveal>
               </div>
             </div>
-          </Reveal>
-        </div>
-      </section>
+            <p className="mt-10 text-center">
+              <a
+                href={BIZ.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-outline"
+              >
+                See Air Master on Google Maps <ArrowRight className="h-4 w-4" />
+              </a>
+            </p>
+          </div>
+        </section>
 
-      {/* ============ FOOTER ============ */}
-      <footer className="relative z-10 py-16">
-        <div className="mx-auto max-w-[100rem] px-6 md:px-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+        {/* About */}
+        <section id="about" className="bg-white py-16 md:py-24">
+          <div className="mx-auto grid max-w-[1200px] gap-12 px-4 md:px-6 lg:grid-cols-2 lg:items-start">
             <div>
-              <div className="font-display text-2xl font-semibold text-[color:var(--cream)] tracking-tight">Air Master</div>
-              <div className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--sand)] mt-1">Heat &amp; Air · Since 1986</div>
-              <p className="mt-4 font-body text-sm text-[color:var(--cream-2)] max-w-xs leading-relaxed">
-                Owner-led Sacramento residential HVAC. Four decades of quality work at reasonable prices.
+              <SectionHeading eyebrow="About us" title={`A Sacramento Family Business Since ${BIZ.since}`} />
+              <div className="mt-6 space-y-4 text-lg text-ink-2">
+                <p>
+                  Air Master Heat and Air has been keeping Sacramento homes comfortable since{" "}
+                  {BIZ.since}. It&apos;s a family company, led by owner {BIZ.owner}, and it has
+                  stayed local through {YEARS} years of Sacramento summers and winters.
+                </p>
+                <p>
+                  The work covers the full range of home heating and cooling: fixing an air
+                  conditioner or furnace that has stopped working, installing new equipment, replacing
+                  an entire system, and keeping it maintained afterward.
+                </p>
+                <p>
+                  The reputation is simple, and it comes from customers rather than advertising: good
+                  work at reasonable prices. When you call, you&apos;re talking to a local family
+                  business, not a national call center.
+                </p>
+              </div>
+            </div>
+            <ul className="grid gap-4 sm:grid-cols-2">
+              {[
+                { icon: CalendarIcon, title: `${YEARS} years in Sacramento`, body: `Serving local homes since ${BIZ.since}.` },
+                { icon: UsersIcon, title: "Family-owned and led", body: `${BIZ.owner} runs the company.` },
+                { icon: TagIcon, title: "Fair, reasonable prices", body: "The theme customers mention most." },
+                { icon: WrenchIcon, title: "Repair, replace, maintain", body: "Heating and cooling under one roof." },
+              ].map((d, i) => (
+                <Reveal key={d.title} delay={i * 50}>
+                  <li className="card h-full p-6">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange/10 text-orange">
+                      <d.icon />
+                    </span>
+                    <h3 className="mt-4 text-lg font-bold">{d.title}</h3>
+                    <p className="mt-1 text-ink-2">{d.body}</p>
+                  </li>
+                </Reveal>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* How it works */}
+        <section className="bg-navy-tint py-16 md:py-24">
+          <div className="mx-auto max-w-[1200px] px-4 md:px-6">
+            <SectionHeading eyebrow="How it works" title="Getting Your Heating or AC Fixed" center />
+            <ol className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {STEPS.map((step, i) => (
+                <Reveal key={step.title} delay={i * 60}>
+                  <li className="card h-full p-6">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-navy font-bold text-white">
+                      {i + 1}
+                    </span>
+                    <h3 className="mt-4 text-lg font-bold">{step.title}</h3>
+                    <p className="mt-2 text-ink-2">{step.body}</p>
+                  </li>
+                </Reveal>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* Service area */}
+        <section id="area" className="bg-white py-16 md:py-24">
+          <div className="mx-auto grid max-w-[1200px] gap-10 px-4 md:px-6 lg:grid-cols-2 lg:items-center">
+            <div>
+              <SectionHeading eyebrow="Service area" title="Serving Sacramento and Surrounding Areas">
+                Air Master is based on La Grande Blvd in South Sacramento and works in homes across
+                Sacramento and the surrounding communities.
+              </SectionHeading>
+              <ul className="mt-6 flex flex-wrap gap-2">
+                {["Sacramento", "South Sacramento", "Surrounding areas"].map((a) => (
+                  <li
+                    key={a}
+                    className="rounded-full border border-line bg-navy-tint px-4 py-1.5 font-semibold text-navy"
+                  >
+                    {a}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-6 text-ink-2">
+                Not sure if you&apos;re in the area? Call{" "}
+                <a href={BIZ.phoneHref} className="font-bold text-navy underline-offset-4 hover:underline">
+                  {BIZ.phone}
+                </a>{" "}
+                and ask.
               </p>
             </div>
-            <div className="md:justify-self-center">
-              <div className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--sand)]">Direct</div>
-              <a href={BUSINESS.phoneHref} className="mt-2 block font-display text-2xl font-medium text-[color:var(--cream)] hover:text-[color:var(--amber)] transition-colors">
-                {BUSINESS.phone}
-              </a>
-              <div className="mt-4 font-mono text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--sand)]">On the map</div>
-              <a href={`https://www.google.com/maps?q=${encodeURIComponent(BUSINESS.address)}`} target="_blank" rel="noreferrer" className="mt-1 block font-body text-sm text-[color:var(--cream)] hover:text-[color:var(--copper)] transition-colors">
-                {BUSINESS.address}
-              </a>
-            </div>
-            <div className="md:justify-self-end">
-              <div className="font-mono text-[0.68rem] uppercase tracking-[0.28em] text-[color:var(--sand)]">Legal</div>
-              <div className="mt-2 font-body text-sm text-[color:var(--cream-2)]">
-                {BUSINESS.legal}<br />
-                California licensed HVAC contractor<br />
-                &copy; {new Date().getFullYear()} — All rights reserved
-              </div>
+            <div className="card overflow-hidden p-0">
+              <iframe
+                title="Map of Air Master Heat and Air, 3513 La Grande Blvd, Sacramento"
+                src={BIZ.mapEmbed}
+                className="h-[320px] w-full md:h-[380px]"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
           </div>
+        </section>
+
+        {/* FAQ */}
+        <section id="faq" className="bg-navy-tint py-16 md:py-24">
+          <div className="mx-auto max-w-3xl px-4 md:px-6">
+            <SectionHeading eyebrow="FAQ" title="Common Questions" center />
+            <div className="mt-10 space-y-3">
+              {FAQS.map((f) => (
+                <details key={f.q} className="card group px-6 py-1">
+                  <summary className="flex items-center justify-between gap-4 py-4 text-lg font-bold text-navy-deep">
+                    {f.q}
+                    <ChevronDown className="faq-chevron h-5 w-5 shrink-0 text-navy" />
+                  </summary>
+                  <p className="pb-5 text-ink-2">{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="bg-navy-deep py-16 text-white md:py-20">
+          <div className="mx-auto max-w-[1200px] px-4 text-center md:px-6">
+            <h2 className="text-3xl font-black text-white md:text-4xl">
+              Need heating or AC help? Call {BIZ.ownerFirst}&apos;s team today.
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-lg text-white/85">
+              Sacramento&apos;s family heating and air company since {BIZ.since}.
+            </p>
+            <a href={BIZ.phoneHref} className="btn btn-primary mt-8 px-8 text-xl">
+              <PhoneIcon className="h-6 w-6" /> Call {BIZ.phone}
+            </a>
+          </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-white pb-24 pt-12 md:pb-12">
+        <div className="mx-auto grid max-w-[1200px] gap-8 px-4 md:grid-cols-3 md:px-6">
+          <div>
+            <p className="font-heading text-lg font-black text-navy-deep">{BIZ.name}</p>
+            <p className="mt-2 text-ink-2">
+              {BIZ.street}
+              <br />
+              {BIZ.cityLine}
+            </p>
+            <p className="mt-2">
+              <a href={BIZ.phoneHref} className="font-bold text-navy hover:text-orange">
+                {BIZ.phone}
+              </a>
+            </p>
+          </div>
+          <div>
+            <p className="font-bold text-navy-deep">Services</p>
+            <ul className="mt-2 space-y-1 text-ink-2">
+              {SERVICES.map((s) => (
+                <li key={s.title}>{s.title}</li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="font-bold text-navy-deep">Service area</p>
+            <p className="mt-2 text-ink-2">Sacramento, CA and surrounding areas</p>
+            <p className="mt-4 text-ink-2">Family-owned since {BIZ.since}</p>
+          </div>
         </div>
+        <p className="mx-auto mt-10 max-w-[1200px] px-4 text-sm text-ink-2 md:px-6">
+          &copy; {new Date().getFullYear()} {BIZ.name}
+        </p>
       </footer>
+
+      {/* Mobile bottom bar */}
+      <div className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-line bg-white p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] md:hidden">
+        <a href={BIZ.phoneHref} className="btn btn-primary">
+          <PhoneIcon className="h-5 w-5" /> Call
+        </a>
+        <a href={BIZ.directionsUrl} target="_blank" rel="noopener noreferrer" className="btn btn-outline">
+          <PinIcon className="h-5 w-5" /> Directions
+        </a>
+      </div>
     </>
   );
 }

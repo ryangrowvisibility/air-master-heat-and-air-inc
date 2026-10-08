@@ -1,47 +1,41 @@
-import type { Metadata } from "next";
-import { Sora, Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Merriweather, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
 
-const sora = Sora({
-  variable: "--font-display",
+const merriweather = Merriweather({
+  variable: "--font-heading",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["700", "900"],
   display: "swap",
 });
 
-const hanken = Hanken_Grotesk({
+const sourceSans = Source_Sans_3({
   variable: "--font-body",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
-});
-
-const jbmono = JetBrains_Mono({
-  variable: "--font-mono",
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Air Master Heat and Air — Sacramento's Heating & Air Since 1986",
+  title: "Air Master Heat and Air | Heating & AC Repair in Sacramento, CA",
   description:
-    "Family-run Sacramento HVAC contractor since 1986. Full system replacements, AC and furnace repair, installations, and maintenance. Owner-led by Farid Farahvash — 40 years of Sacramento heating and cooling.",
+    "Family-owned Sacramento heating and air conditioning company since 1986. AC and furnace repair, installation, system replacement and maintenance. Call (916) 399-1585.",
   metadataBase: new URL("https://air-master-heat-and-air-inc.growlocalvisibility.com"),
   openGraph: {
-    title: "Air Master Heat and Air — Sacramento HVAC Since 1986",
+    title: "Air Master Heat and Air | Sacramento Heating & Air Since 1986",
     description:
-      "Forty years of Sacramento heating and cooling. Owner-led residential HVAC — replacements, repair, installation, maintenance.",
+      "AC and furnace repair, installation, replacement and maintenance in Sacramento. Family-owned since 1986. Call (916) 399-1585.",
     type: "website",
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#1e3a5f",
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${sora.variable} ${hanken.variable} ${jbmono.variable} antialiased`}
-    >
+    <html lang="en" className={`${merriweather.variable} ${sourceSans.variable} antialiased`}>
       <body>{children}</body>
     </html>
   );

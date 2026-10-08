@@ -11,10 +11,6 @@ export default function Reveal({ children, delay = 0 }: Props) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (typeof IntersectionObserver === "undefined") {
-      setVisible(true);
-      return;
-    }
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
